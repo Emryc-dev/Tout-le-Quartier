@@ -2770,6 +2770,8 @@ const viewProjectWrapEl = document.getElementById("view-project");
 const projectSectionEl = document.getElementById("tlq-project-view");
 const viewShippingWrapEl = document.getElementById("view-shipping");
 const shippingSectionEl = document.getElementById("tlq-shipping-view");
+const viewLoginWrapEl = document.getElementById("view-login");
+const loginSectionEl = document.getElementById("tlq-login-view");
 
 function updateHeaderNavState(activeKey) {
   document.querySelectorAll(".site-header nav a").forEach((link) => {
@@ -2795,6 +2797,8 @@ function showView(viewName) {
   projectSectionEl.hidden = viewName !== "project";
   if (viewShippingWrapEl) viewShippingWrapEl.hidden = viewName !== "shipping";
   if (shippingSectionEl) shippingSectionEl.hidden = viewName !== "shipping";
+  if (viewLoginWrapEl) viewLoginWrapEl.hidden = viewName !== "login";
+  if (loginSectionEl) loginSectionEl.hidden = viewName !== "login";
 
   if (viewName === "home") {
     updateHeaderNavState("home");
@@ -2854,6 +2858,14 @@ function navigateToShipping() {
   }
 }
 
+function navigateToLogin() {
+  if (window.location.hash !== "#login") {
+    window.location.hash = "#login";
+  } else {
+    applyRouteFromHash();
+  }
+}
+
 function applyRouteFromHash() {
   const raw = (window.location.hash || "#runway").trim();
 
@@ -2875,6 +2887,13 @@ function applyRouteFromHash() {
 
   if (raw === "#shipping-policy" || raw === "#shipping") {
     showView("shipping");
+    scrollToTopSmooth();
+    return;
+  }
+
+  if (raw === "#login" || raw === "#signin") {
+    showView("login");
+    window.dispatchEvent(new CustomEvent("tlq:login-view-open"));
     scrollToTopSmooth();
     return;
   }
@@ -2914,6 +2933,19 @@ function bindInternalNavLinks(root = document) {
         navigateToProject();
       } else if (target === "shipping") {
         navigateToShipping();
+      } else if (target === "contact") {
+        navigateToShipping();
+        window.requestAnimationFrame(() => {
+          const helpEl = document.getElementById("tlq-help-heading");
+          if (helpEl) {
+            helpEl.scrollIntoView({
+              behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+                ? "auto"
+                : "smooth",
+              block: "start",
+            });
+          }
+        });
       }
     });
   });
@@ -3468,6 +3500,768 @@ function downloadShortlistTxt() {
 }
 
 /* --------------------------------------------------------------------------
+   Static Client-Side Account & Login (<dialog id="account-dialog">)
+   -------------------------------------------------------------------------- */
+
+const ACCOUNT_SESSION_KEY = "tlq-account-session-v1";
+const ACCOUNT_USERS_KEY = "tlq-account-users-v1";
+const ACCOUNT_ORDERS_KEY = "tlq-account-orders-v1";
+
+function loadStaticSession() {
+  try {
+    const raw = window.localStorage.getItem(ACCOUNT_SESSION_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+function saveStaticSession(session) {
+  try {
+    if (session) {
+      window.localStorage.setItem(ACCOUNT_SESSION_KEY, JSON.stringify(session));
+    } else {
+      window.localStorage.removeItem(ACCOUNT_SESSION_KEY);
+    }
+  } catch {
+    // Ignore storage quota errors
+  }
+}
+
+function loadStaticUsers() {
+  try {
+    const raw = window.localStorage.getItem(ACCOUNT_USERS_KEY);
+    const parsed = raw ? JSON.parse(raw) : [];
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveStaticUsers(users) {
+  try {
+    window.localStorage.setItem(ACCOUNT_USERS_KEY, JSON.stringify(users.slice(0, 30)));
+  } catch {
+    // Ignore storage quota errors
+  }
+}
+
+function loadStaticOrders() {
+  try {
+    const raw = window.localStorage.getItem(ACCOUNT_ORDERS_KEY);
+    const parsed = raw ? JSON.parse(raw) : [];
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+function recordStaticOrder(orderCode, snapshot) {
+  try {
+    const existing = loadStaticOrders();
+    const session = loadStaticSession();
+    existing.unshift({
+      orderCode,
+      date: new Date().toISOString().slice(0, 10),
+      itemCount: snapshot.totalCount,
+      total: snapshot.estimatedTotal,
+      email: session ? session.email : "",
+      itemsSummary: snapshot.lines
+        .map((l) => `${l.product.name} (${l.sizeLabel}) × ${l.quantity}`)
+        .join(", "),
+    });
+    window.localStorage.setItem(ACCOUNT_ORDERS_KEY, JSON.stringify(existing.slice(0, 25)));
+  } catch {
+    // Ignore storage quota errors
+  }
+}
+
+function getInitialsFromName(name) {
+  const parts = String(name || "TL")
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean);
+  if (parts.length === 0) return "TL";
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
+function wireStaticAccountAuth() {
+  const accountDialog = document.getElementById("account-dialog");
+  const openAccountBtn = document.getElementById("open-account");
+  const headerInitialsEl = document.querySelector("[data-account-initials]");
+  const headingEl = document.querySelector("[data-account-heading]");
+  const backBtn = document.querySelector("[data-account-back]");
+
+  const menuView = document.querySelector('[data-account-view="menu"]');
+  const signinView = document.querySelector('[data-account-view="signin"]');
+  const registerView = document.querySelector('[data-account-view="register"]');
+  const memberView = document.querySelector('[data-account-view="member"]');
+
+  const signinForm = document.getElementById("account-signin-form");
+  const registerForm = document.getElementById("account-register-form");
+  const profileForm = document.getElementById("account-profile-form");
+
+  const signinErrEl = document.querySelector("[data-account-signin-error]");
+  const registerErrEl = document.querySelector("[data-account-register-error]");
+
+  const memberAvatarEl = document.querySelector("[data-member-avatar]");
+  const memberNameEl = document.querySelector("[data-member-name]");
+  const memberEmailEl = document.querySelector("[data-member-email]");
+  const ordersListEl = document.querySelector("[data-account-orders-list]");
+  const profNameInput = document.getElementById("acc-prof-name");
+  const profRegionSelect = document.getElementById("acc-prof-region");
+
+  if (!accountDialog || !openAccountBtn) return;
+
+  let pendingMemberTab = "orders";
+
+  function syncHeaderAccountState() {
+    const session = loadStaticSession();
+    if (session) {
+      if (headerInitialsEl) {
+        headerInitialsEl.textContent = getInitialsFromName(session.name);
+        headerInitialsEl.hidden = false;
+      }
+      openAccountBtn.setAttribute("aria-label", `Account — ${session.name}`);
+    } else {
+      if (headerInitialsEl) {
+        headerInitialsEl.textContent = "";
+        headerInitialsEl.hidden = true;
+      }
+      openAccountBtn.setAttribute("aria-label", "Account sign in");
+    }
+  }
+
+  function renderMemberOrders() {
+    if (!ordersListEl) return;
+    ordersListEl.replaceChildren();
+    const orders = loadStaticOrders();
+    if (orders.length === 0) {
+      const empty = document.createElement("div");
+      empty.className = "account-orders-empty";
+      const msg = document.createElement("p");
+      msg.textContent =
+        "No order summaries yet. Add pieces to your bag and confirm an order summary to see them here.";
+      const cta = document.createElement("button");
+      cta.type = "button";
+      cta.className = "tlq-link-inline";
+      cta.textContent = "Browse The Collection →";
+      cta.addEventListener("click", () => {
+        accountDialog.close();
+        navigateToHome(true);
+      });
+      empty.append(msg, cta);
+      ordersListEl.appendChild(empty);
+      return;
+    }
+
+    const list = document.createElement("div");
+    list.className = "account-order-list";
+    orders.forEach((order) => {
+      const row = document.createElement("div");
+      row.className = "account-order-row";
+
+      const top = document.createElement("div");
+      top.className = "account-order-row__top";
+      const codeSpan = document.createElement("span");
+      codeSpan.textContent = order.orderCode;
+      const totalSpan = document.createElement("span");
+      totalSpan.textContent = formatEur(order.total);
+      top.append(codeSpan, totalSpan);
+
+      const meta = document.createElement("div");
+      meta.className = "account-order-row__meta";
+      meta.textContent = `${order.date} · ${order.itemCount} ${
+        order.itemCount === 1 ? "item" : "items"
+      } · ${order.itemsSummary}`;
+
+      row.append(top, meta);
+      list.appendChild(row);
+    });
+    ordersListEl.appendChild(list);
+  }
+
+  function setMemberTab(tabName) {
+    const activeTab = tabName === "profile" ? "profile" : "orders";
+    accountDialog.querySelectorAll("[data-member-tab]").forEach((btn) => {
+      const isMatch = btn.dataset.memberTab === activeTab;
+      btn.classList.toggle("is-active", isMatch);
+      btn.setAttribute("aria-selected", isMatch ? "true" : "false");
+    });
+    accountDialog.querySelectorAll("[data-member-panel]").forEach((panel) => {
+      panel.hidden = panel.dataset.memberPanel !== activeTab;
+    });
+    if (activeTab === "orders") {
+      renderMemberOrders();
+    }
+  }
+
+  function populateMemberView(session) {
+    if (memberAvatarEl) memberAvatarEl.textContent = getInitialsFromName(session.name);
+    if (memberNameEl) memberNameEl.textContent = session.name;
+    if (memberEmailEl) memberEmailEl.textContent = session.email;
+    if (profNameInput) profNameInput.value = session.name;
+    if (profRegionSelect) profRegionSelect.value = session.region || "United States";
+    renderMemberOrders();
+  }
+
+  function showAccountView(viewName) {
+    if (menuView) menuView.hidden = viewName !== "menu";
+    if (signinView) signinView.hidden = viewName !== "signin";
+    if (registerView) registerView.hidden = viewName !== "register";
+    if (memberView) memberView.hidden = viewName !== "member";
+
+    if (signinErrEl) signinErrEl.hidden = true;
+    if (registerErrEl) registerErrEl.hidden = true;
+
+    const showBack = viewName === "signin" || viewName === "register";
+    if (backBtn) backBtn.hidden = !showBack;
+
+    if (headingEl) {
+      if (viewName === "signin") headingEl.textContent = "Sign in";
+      else if (viewName === "register") headingEl.textContent = "Create account";
+      else headingEl.textContent = "Account";
+    }
+  }
+
+  function openAccountDialog() {
+    const session = loadStaticSession();
+    if (session) {
+      populateMemberView(session);
+      showAccountView("member");
+      setMemberTab(pendingMemberTab);
+    } else {
+      showAccountView("menu");
+    }
+    if (!accountDialog.open) {
+      accountDialog.showModal();
+    }
+  }
+
+  openAccountBtn.addEventListener("click", openAccountDialog);
+
+  accountDialog.querySelectorAll("[data-account-close]").forEach((btn) => {
+    btn.addEventListener("click", () => accountDialog.close());
+  });
+
+  accountDialog.addEventListener("click", (e) => {
+    if (e.target === accountDialog) accountDialog.close();
+  });
+
+  if (backBtn) {
+    backBtn.addEventListener("click", () => showAccountView("menu"));
+  }
+
+  accountDialog.querySelectorAll("[data-account-goto]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      showAccountView(btn.dataset.accountGoto || "menu");
+    });
+  });
+
+  accountDialog.querySelectorAll("[data-account-open-login]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      accountDialog.close();
+      navigateToLogin();
+    });
+  });
+
+  window.addEventListener("tlq:account-sync", () => {
+    syncHeaderAccountState();
+  });
+
+  window.addEventListener("tlq:open-account-modal", () => {
+    openAccountDialog();
+  });
+
+  accountDialog.querySelectorAll("[data-account-shortcut]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      pendingMemberTab = btn.dataset.accountShortcut || "orders";
+      const session = loadStaticSession();
+      if (session) {
+        populateMemberView(session);
+        showAccountView("member");
+        setMemberTab(pendingMemberTab);
+      } else {
+        showAccountView("signin");
+      }
+    });
+  });
+
+  accountDialog.querySelectorAll("[data-member-tab]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      pendingMemberTab = btn.dataset.memberTab || "orders";
+      setMemberTab(pendingMemberTab);
+    });
+  });
+
+  accountDialog.querySelectorAll("[data-toggle-pass]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const input = document.getElementById(btn.dataset.togglePass || "");
+      if (!input) return;
+      const showing = input.type === "text";
+      input.type = showing ? "password" : "text";
+      btn.textContent = showing ? "Show" : "Hide";
+      btn.setAttribute("aria-label", showing ? "Show password" : "Hide password");
+    });
+  });
+
+  if (signinForm) {
+    signinForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (signinErrEl) signinErrEl.hidden = true;
+
+      const fd = new FormData(signinForm);
+      const email = String(fd.get("email") || "").trim().toLowerCase();
+      const password = String(fd.get("password") || "");
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      if (!email || !emailRegex.test(email)) {
+        if (signinErrEl) {
+          signinErrEl.textContent = "Please enter a valid email address.";
+          signinErrEl.hidden = false;
+        }
+        return;
+      }
+
+      if (password.length < 4) {
+        if (signinErrEl) {
+          signinErrEl.textContent = "Please enter a password of at least 4 characters.";
+          signinErrEl.hidden = false;
+        }
+        return;
+      }
+
+      const users = loadStaticUsers();
+      let user = users.find((u) => u.email.toLowerCase() === email);
+      if (user && user.password && user.password !== password) {
+        if (signinErrEl) {
+          signinErrEl.textContent = "Incorrect password for this account.";
+          signinErrEl.hidden = false;
+        }
+        return;
+      }
+
+      if (!user) {
+        const rawHandle = email.split("@")[0].replace(/[._-]+/g, " ").trim();
+        const displayName = rawHandle
+          ? rawHandle.replace(/\b\w/g, (ch) => ch.toUpperCase())
+          : "TLQ Member";
+        user = {
+          name: displayName,
+          email,
+          password,
+          region: "United States",
+        };
+        users.unshift(user);
+        saveStaticUsers(users);
+      }
+
+      const session = {
+        name: user.name,
+        email: user.email,
+        region: user.region || "United States",
+      };
+      saveStaticSession(session);
+      syncHeaderAccountState();
+      populateMemberView(session);
+      showAccountView("member");
+      setMemberTab(pendingMemberTab);
+      signinForm.reset();
+      showBagToast(`Signed in as ${session.name}`);
+    });
+  }
+
+  if (registerForm) {
+    registerForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (registerErrEl) registerErrEl.hidden = true;
+
+      const fd = new FormData(registerForm);
+      const name = String(fd.get("name") || "").trim();
+      const email = String(fd.get("email") || "").trim().toLowerCase();
+      const password = String(fd.get("password") || "");
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      if (!name) {
+        if (registerErrEl) {
+          registerErrEl.textContent = "Please enter your full name.";
+          registerErrEl.hidden = false;
+        }
+        return;
+      }
+
+      if (!email || !emailRegex.test(email)) {
+        if (registerErrEl) {
+          registerErrEl.textContent = "Please enter a valid email address.";
+          registerErrEl.hidden = false;
+        }
+        return;
+      }
+
+      if (password.length < 4) {
+        if (registerErrEl) {
+          registerErrEl.textContent = "Password must be at least 4 characters.";
+          registerErrEl.hidden = false;
+        }
+        return;
+      }
+
+      const users = loadStaticUsers().filter((u) => u.email.toLowerCase() !== email);
+      users.unshift({
+        name,
+        email,
+        password,
+        region: "United States",
+      });
+      saveStaticUsers(users);
+
+      const session = {
+        name,
+        email,
+        region: "United States",
+      };
+      saveStaticSession(session);
+      syncHeaderAccountState();
+      populateMemberView(session);
+      showAccountView("member");
+      setMemberTab("profile");
+      registerForm.reset();
+      showBagToast(`Welcome, ${session.name}`);
+    });
+  }
+
+  if (profileForm) {
+    profileForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const session = loadStaticSession();
+      if (!session) return;
+      const fd = new FormData(profileForm);
+      const updatedName = String(fd.get("name") || "").trim() || session.name;
+      const updatedRegion = String(fd.get("region") || "United States");
+
+      const updatedSession = {
+        ...session,
+        name: updatedName,
+        region: updatedRegion,
+      };
+      saveStaticSession(updatedSession);
+
+      const users = loadStaticUsers().map((u) =>
+        u.email.toLowerCase() === session.email.toLowerCase()
+          ? { ...u, name: updatedName, region: updatedRegion }
+          : u
+      );
+      saveStaticUsers(users);
+      syncHeaderAccountState();
+      populateMemberView(updatedSession);
+      showBagToast("Profile preferences saved");
+    });
+  }
+
+  const affiliateJumpBtn = accountDialog.querySelector("[data-account-goto-affiliate]");
+  if (affiliateJumpBtn) {
+    affiliateJumpBtn.addEventListener("click", () => {
+      accountDialog.close();
+      navigateToProject();
+    });
+  }
+
+  const signoutBtn = accountDialog.querySelector("[data-account-signout]");
+  if (signoutBtn) {
+    signoutBtn.addEventListener("click", () => {
+      saveStaticSession(null);
+      syncHeaderAccountState();
+      showAccountView("menu");
+      showBagToast("Signed out");
+    });
+  }
+
+  syncHeaderAccountState();
+}
+
+function wireFooterInteractions() {
+  const CLUB_KEY = "tlq-club-subscribers-v1";
+  const clubForm = document.getElementById("footer-club-form");
+  const feedbackEl = document.querySelector("[data-footer-feedback]");
+  const legalDialog = document.getElementById("legal-dialog");
+  const legalTitleEl = document.querySelector("[data-legal-title]");
+  const legalBodyEl = document.querySelector("[data-legal-body]");
+
+  if (clubForm) {
+    clubForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const fd = new FormData(clubForm);
+      const email = String(fd.get("email") || "").trim().toLowerCase();
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      if (!email || !emailRegex.test(email)) {
+        if (feedbackEl) {
+          feedbackEl.textContent = "Please enter a valid email address.";
+          feedbackEl.classList.add("is-error");
+          feedbackEl.hidden = false;
+        }
+        return;
+      }
+
+      try {
+        const raw = window.localStorage.getItem(CLUB_KEY);
+        const list = raw ? JSON.parse(raw) : [];
+        const updated = Array.isArray(list) ? list : [];
+        if (!updated.includes(email)) {
+          updated.unshift(email);
+          window.localStorage.setItem(CLUB_KEY, JSON.stringify(updated.slice(0, 50)));
+        }
+      } catch {
+        // Ignore storage errors
+      }
+
+      clubForm.reset();
+      if (feedbackEl) {
+        feedbackEl.textContent = "Welcome to the club — you’re on the early-access list.";
+        feedbackEl.classList.remove("is-error");
+        feedbackEl.hidden = false;
+      }
+      showBagToast("Joined the Tout le Quartier club");
+    });
+  }
+
+  const LEGAL_DOCS = {
+    privacy: {
+      title: "Privacy policy",
+      sections: [
+        {
+          heading: "Information Collected",
+          body: "Tout le Quartier collects only the details you choose to provide when building a bag shortlist, subscribing to early-access drops, submitting a TLQPROJECT affiliate inquiry, or signing in locally on this storefront.",
+        },
+        {
+          heading: "How We Use Your Details",
+          body: "Your contact details are used solely to communicate regarding product drops, shipment updates, or affiliate requests. We never sell or share customer information with third-party advertisers.",
+        },
+        {
+          heading: "Contact & Data Requests",
+          body: "For any privacy questions or data removal requests, contact our Paris client services team at TLQ.projectparis@gmail.com.",
+        },
+      ],
+    },
+    refund: {
+      title: "Refund policy",
+      sections: [
+        {
+          heading: "Eligibility & Condition",
+          body: "Items must be unworn, unwashed, and returned in original condition with all woven tags and protective packaging intact within 14 days of delivery.",
+        },
+        {
+          heading: "Pre-Order & International Shipments",
+          body: "International orders outside the US and Canada are produced on a pre-order schedule. Customs duties, import taxes, and delivery fees paid upon receipt are non-refundable.",
+        },
+        {
+          heading: "How to Start a Return or Exchange",
+          body: "Email TLQ.projectparis@gmail.com with your order reference and requested size exchange or refund before sending any item back.",
+        },
+      ],
+    },
+  };
+
+  if (legalDialog && legalTitleEl && legalBodyEl) {
+    document.querySelectorAll("[data-legal-open]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const docKey = btn.dataset.legalOpen === "refund" ? "refund" : "privacy";
+        const doc = LEGAL_DOCS[docKey];
+        legalTitleEl.textContent = doc.title;
+        legalBodyEl.replaceChildren();
+        doc.sections.forEach((sec) => {
+          const h3 = document.createElement("h3");
+          h3.textContent = sec.heading;
+          const p = document.createElement("p");
+          p.textContent = sec.body;
+          legalBodyEl.append(h3, p);
+        });
+        if (!legalDialog.open) {
+          legalDialog.showModal();
+        }
+      });
+    });
+
+    legalDialog.querySelectorAll("[data-legal-close]").forEach((btn) => {
+      btn.addEventListener("click", () => legalDialog.close());
+    });
+
+    legalDialog.addEventListener("click", (e) => {
+      if (e.target === legalDialog) legalDialog.close();
+    });
+  }
+
+  document.querySelectorAll("[data-scroll-top]").forEach((btn) => {
+    btn.addEventListener("click", scrollToTopSmooth);
+  });
+}
+
+function wireDedicatedLoginPage() {
+  const entryStep = document.querySelector('[data-login-step="entry"]');
+  const verifyStep = document.querySelector('[data-login-step="verify"]');
+  const signedInStep = document.querySelector('[data-login-step="signedin"]');
+  const expressBtn = document.querySelector("[data-login-express]");
+  const emailForm = document.getElementById("tlq-login-email-form");
+  const codeForm = document.getElementById("tlq-login-code-form");
+  const emailErrEl = document.querySelector("[data-login-error]");
+  const codeErrEl = document.querySelector("[data-login-code-error]");
+  const sentEmailEl = document.querySelector("[data-login-sent-email]");
+  const changeEmailBtn = document.querySelector("[data-login-change-email]");
+  const fillDemoBtn = document.querySelector("[data-login-fill-demo]");
+  const codeInput = document.getElementById("tlq-login-code");
+  const memberHeadingEl = document.querySelector("[data-login-member-heading]");
+  const memberEmailEl = document.querySelector("[data-login-member-email]");
+  const openAccountBtn = document.querySelector("[data-login-open-account]");
+
+  if (!entryStep || !verifyStep || !signedInStep) return;
+
+  let pendingEmail = "";
+  let pendingSubscribe = false;
+
+  function setStep(step) {
+    entryStep.hidden = step !== "entry";
+    verifyStep.hidden = step !== "verify";
+    signedInStep.hidden = step !== "signedin";
+    if (emailErrEl) emailErrEl.hidden = true;
+    if (codeErrEl) codeErrEl.hidden = true;
+  }
+
+  function syncLoginPageState() {
+    const session = loadStaticSession();
+    if (session) {
+      if (memberHeadingEl) memberHeadingEl.textContent = `Welcome back, ${session.name}`;
+      if (memberEmailEl) memberEmailEl.textContent = session.email;
+      setStep("signedin");
+    } else {
+      setStep("entry");
+    }
+  }
+
+  function completeStaticLogin(email, fallbackName) {
+    const cleanEmail = email.trim().toLowerCase();
+    const users = loadStaticUsers();
+    let user = users.find((u) => u.email.toLowerCase() === cleanEmail);
+    if (!user) {
+      const rawHandle = cleanEmail.split("@")[0].replace(/[._-]+/g, " ").trim();
+      const displayName =
+        fallbackName ||
+        (rawHandle
+          ? rawHandle.replace(/\b\w/g, (ch) => ch.toUpperCase())
+          : "TLQ Member");
+      user = {
+        name: displayName,
+        email: cleanEmail,
+        password: "",
+        region: "United States",
+      };
+      users.unshift(user);
+      saveStaticUsers(users);
+    }
+
+    if (pendingSubscribe) {
+      try {
+        const raw = window.localStorage.getItem("tlq-club-subscribers-v1");
+        const list = raw ? JSON.parse(raw) : [];
+        const updated = Array.isArray(list) ? list : [];
+        if (!updated.includes(cleanEmail)) {
+          updated.unshift(cleanEmail);
+          window.localStorage.setItem(
+            "tlq-club-subscribers-v1",
+            JSON.stringify(updated.slice(0, 50))
+          );
+        }
+      } catch {
+        // Ignore storage errors
+      }
+    }
+
+    const session = {
+      name: user.name,
+      email: user.email,
+      region: user.region || "United States",
+    };
+    saveStaticSession(session);
+    window.dispatchEvent(new CustomEvent("tlq:account-sync"));
+    showBagToast(`Signed in as ${session.name}`);
+    navigateToHome(false);
+  }
+
+  window.addEventListener("tlq:login-view-open", syncLoginPageState);
+
+  if (expressBtn) {
+    expressBtn.addEventListener("click", () => {
+      const users = loadStaticUsers();
+      if (users.length > 0) {
+        completeStaticLogin(users[0].email, users[0].name);
+      } else {
+        completeStaticLogin("member@toutlequartier.paris", "TLQ Member");
+      }
+    });
+  }
+
+  if (emailForm) {
+    emailForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (emailErrEl) emailErrEl.hidden = true;
+      const fd = new FormData(emailForm);
+      const email = String(fd.get("email") || "").trim().toLowerCase();
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      if (!email || !emailRegex.test(email)) {
+        if (emailErrEl) {
+          emailErrEl.textContent = "Please enter a valid email address.";
+          emailErrEl.hidden = false;
+        }
+        return;
+      }
+
+      pendingEmail = email;
+      pendingSubscribe = Boolean(fd.get("newsletter"));
+      if (sentEmailEl) sentEmailEl.textContent = pendingEmail;
+      if (codeInput) codeInput.value = "";
+      setStep("verify");
+      if (codeInput) codeInput.focus();
+    });
+  }
+
+  if (changeEmailBtn) {
+    changeEmailBtn.addEventListener("click", () => {
+      setStep("entry");
+    });
+  }
+
+  if (fillDemoBtn && codeInput) {
+    fillDemoBtn.addEventListener("click", () => {
+      codeInput.value = "123456";
+      codeInput.focus();
+    });
+  }
+
+  if (codeForm) {
+    codeForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (codeErrEl) codeErrEl.hidden = true;
+      const code = String(new FormData(codeForm).get("code") || "").trim();
+      if (!/^\d{6}$/.test(code)) {
+        if (codeErrEl) {
+          codeErrEl.textContent = "Please enter a 6-digit numeric code (for example, 123456).";
+          codeErrEl.hidden = false;
+        }
+        return;
+      }
+      completeStaticLogin(pendingEmail);
+    });
+  }
+
+  if (openAccountBtn) {
+    openAccountBtn.addEventListener("click", () => {
+      window.dispatchEvent(new CustomEvent("tlq:open-account-modal"));
+    });
+  }
+}
+
+/* --------------------------------------------------------------------------
    Application Bootstrap
    -------------------------------------------------------------------------- */
 
@@ -3482,6 +4276,9 @@ function initApp() {
   bindInternalNavLinks(document);
   wireShippingPolicyInteractions();
   wireAffiliateProgramInteractions();
+  wireStaticAccountAuth();
+  wireFooterInteractions();
+  wireDedicatedLoginPage();
 
   window.addEventListener("tlq:bag-change", () => {
     clearArmed = false;
@@ -3519,6 +4316,7 @@ function initApp() {
         orderCode: `#TLQ-${randomNum}`,
         snapshot,
       };
+      recordStaticOrder(checkoutConfirmation.orderCode, snapshot);
       renderBagDialog();
       showBagToast(`Order summary ${checkoutConfirmation.orderCode} ready`);
     });

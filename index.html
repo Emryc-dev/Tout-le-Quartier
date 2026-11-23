@@ -43,33 +43,58 @@
       </a>
 
       <nav aria-label="Main navigation">
-        <a href="#runway" data-nav="home" aria-current="page">Runway</a>
+        <a href="#runway" data-nav="home" aria-current="page">Home</a>
         <a href="#full-catalog" data-nav="catalog">Catalog</a>
         <a href="#tlqproject" data-nav="project">TLQPROJECT</a>
         <a href="#shipping-policy" data-nav="shipping">Shipping</a>
       </nav>
 
-      <button
-        type="button"
-        id="open-bag"
-        class="bag-trigger"
-        aria-label="Open shopping bag"
-        aria-haspopup="dialog"
-        aria-controls="bag-dialog"
-      >
-        <svg
-          width="22"
-          height="24"
-          viewBox="0 0 24 26"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.3"
-          aria-hidden="true"
+      <div class="header-actions">
+        <button
+          type="button"
+          id="open-account"
+          class="account-trigger"
+          aria-label="Account sign in"
+          aria-haspopup="dialog"
+          aria-controls="account-dialog"
         >
-          <path d="M4 8h16l1 16H3L4 8zM8 8V6a4 4 0 0 1 8 0v2" />
-        </svg>
-        <span class="bag-count" data-cart-count>0</span>
-      </button>
+          <svg
+            width="21"
+            height="21"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            aria-hidden="true"
+          >
+            <circle cx="12" cy="8" r="4" />
+            <path d="M4.5 20.5a7.5 7.5 0 0 1 15 0" />
+          </svg>
+          <span class="account-initials" data-account-initials hidden></span>
+        </button>
+
+        <button
+          type="button"
+          id="open-bag"
+          class="bag-trigger"
+          aria-label="Open shopping bag"
+          aria-haspopup="dialog"
+          aria-controls="bag-dialog"
+        >
+          <svg
+            width="22"
+            height="24"
+            viewBox="0 0 24 26"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.3"
+            aria-hidden="true"
+          >
+            <path d="M4 8h16l1 16H3L4 8zM8 8V6a4 4 0 0 1 8 0v2" />
+          </svg>
+          <span class="bag-count" data-cart-count>0</span>
+        </button>
+      </div>
     </header>
 
     <main id="app-views">
@@ -849,14 +874,299 @@
         </section>
       </div>
 
+      <!-- View E: Dedicated Other Sign In Options Page (#login) -->
+      <div id="view-login" data-view="login" hidden>
+        <section
+          id="tlq-login-view"
+          class="tlq-auth"
+          aria-labelledby="tlq-login-heading"
+          hidden
+        >
+          <div class="tlq-auth__inner">
+            <div class="tlq-pdp__crumb">
+              <button type="button" class="tlq-back-btn" data-nav="home">
+                <span aria-hidden="true">←</span> Back to Home
+              </button>
+              <span class="tlq-crumb-trail">Home / Sign in</span>
+            </div>
+
+            <div class="tlq-auth__stage">
+              <div class="tlq-auth__brand">
+                <img
+                  src="/assets/aistudio/Screenshot_2026-11-23_121852-removebg-preview_620dc06d.png"
+                  alt=""
+                  class="tlq-auth__logo"
+                  width="26"
+                  height="36"
+                  referrerpolicy="no-referrer"
+                />
+                <span class="tlq-auth__wordmark">TOUTLEQUARTIER</span>
+                <span class="tlq-auth__city">Paris</span>
+              </div>
+
+              <div class="tlq-auth__card">
+                <!-- Step 1: Express Pass or Email Entry -->
+                <div data-login-step="entry">
+                  <h1 id="tlq-login-heading" class="tlq-auth__title">Sign in</h1>
+                  <p class="tlq-auth__sub">Sign in or create an account</p>
+
+                  <button
+                    type="button"
+                    class="tlq-auth__express"
+                    data-login-express
+                  >
+                    <span>Continue with</span>
+                    <span class="tlq-auth__express-mark">TLQ Pass</span>
+                  </button>
+
+                  <div class="tlq-auth__or" aria-hidden="true">
+                    <span>or</span>
+                  </div>
+
+                  <form id="tlq-login-email-form" class="tlq-auth__form" novalidate>
+                    <label for="tlq-login-email" class="sr-only">Email</label>
+                    <div class="tlq-auth__email-row">
+                      <input
+                        id="tlq-login-email"
+                        name="email"
+                        type="email"
+                        class="tlq-auth__email-input"
+                        placeholder="Email"
+                        autocomplete="email"
+                        required
+                      />
+                      <button
+                        type="submit"
+                        class="tlq-auth__email-submit"
+                        aria-label="Continue with email"
+                      >
+                        <svg
+                          width="16"
+                          height="16"
+                          viewBox="0 0 16 16"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="1.5"
+                          aria-hidden="true"
+                        >
+                          <path d="M2.5 8h11M9.5 4l4 4-4 4" />
+                        </svg>
+                      </button>
+                    </div>
+
+                    <label class="tlq-auth__check">
+                      <input
+                        type="checkbox"
+                        name="newsletter"
+                        id="tlq-login-news"
+                      />
+                      <span>Email me with news and offers</span>
+                    </label>
+
+                    <p
+                      class="tlq-affiliate__error"
+                      data-login-error
+                      role="alert"
+                      hidden
+                    ></p>
+                  </form>
+                </div>
+
+                <!-- Step 2: 6-Digit Static Verification Code -->
+                <div data-login-step="verify" hidden>
+                  <h1 class="tlq-auth__title">Enter code</h1>
+                  <p class="tlq-auth__sub">
+                    Sent to <strong data-login-sent-email></strong>
+                    <button
+                      type="button"
+                      class="tlq-inline-action"
+                      data-login-change-email
+                    >
+                      Change
+                    </button>
+                  </p>
+
+                  <div class="tlq-auth__demo-note">
+                    <span>Static login preview — enter any 6-digit code to sign in.</span>
+                    <button
+                      type="button"
+                      class="tlq-inline-action"
+                      data-login-fill-demo
+                    >
+                      Use 123456
+                    </button>
+                  </div>
+
+                  <form id="tlq-login-code-form" class="tlq-auth__form" novalidate>
+                    <div class="tlq-field">
+                      <label for="tlq-login-code" class="tlq-field__label">6-digit code</label>
+                      <input
+                        id="tlq-login-code"
+                        name="code"
+                        type="text"
+                        inputmode="numeric"
+                        maxlength="6"
+                        class="tlq-field__input tlq-auth__code-input"
+                        placeholder="000000"
+                        autocomplete="one-time-code"
+                        required
+                      />
+                    </div>
+
+                    <p
+                      class="tlq-affiliate__error"
+                      data-login-code-error
+                      role="alert"
+                      hidden
+                    ></p>
+
+                    <button type="submit" class="account-btn account-btn--primary">
+                      Submit
+                    </button>
+                  </form>
+                </div>
+
+                <!-- Step 3: Already Signed In -->
+                <div data-login-step="signedin" hidden>
+                  <p class="tlq-editorial__eyebrow">Signed In · Tout le Quartier</p>
+                  <h1 class="tlq-auth__title" data-login-member-heading>Welcome back</h1>
+                  <p class="tlq-auth__sub" data-login-member-email></p>
+
+                  <div class="tlq-auth__signedin-actions">
+                    <button
+                      type="button"
+                      class="account-btn account-btn--primary"
+                      data-login-open-account
+                    >
+                      Open Account &amp; Orders
+                    </button>
+                    <button
+                      type="button"
+                      class="account-btn account-btn--secondary"
+                      data-nav="home"
+                    >
+                      Continue Shopping
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="tlq-auth__footer-links">
+                <button type="button" class="tlq-auth__legal" data-legal-open="privacy">
+                  Privacy policy
+                </button>
+                <span class="site-footer__sep" aria-hidden="true">·</span>
+                <button type="button" class="tlq-auth__legal" data-legal-open="refund">
+                  Refund policy
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
       <footer class="site-footer">
         <div class="site-footer__inner">
-          <p class="site-footer__brand">Tout le Quartier — Paris · Official Flagship Store</p>
-          <div class="site-footer__links">
-            <a href="#runway" data-nav="home">Runway</a>
-            <a href="#full-catalog" data-nav="catalog">Catalog</a>
-            <a href="#tlqproject" data-nav="project">TLQPROJECT</a>
-            <a href="#shipping-policy" data-nav="shipping">Shipping Policy</a>
+          <div class="site-footer__top">
+            <div class="site-footer__club">
+              <div class="site-footer__brand-lockup">
+                <img
+                  src="/assets/aistudio/Screenshot_2026-11-23_121852-removebg-preview_620dc06d.png"
+                  alt=""
+                  class="site-footer__logo"
+                  width="18"
+                  height="25"
+                  referrerpolicy="no-referrer"
+                />
+                <span class="site-footer__kicker">Tout le Quartier · Paris</span>
+              </div>
+              <h2 class="site-footer__heading">Join the club</h2>
+              <p class="site-footer__sub">
+                Get exclusive deals and early access to new products.
+              </p>
+              <form id="footer-club-form" class="site-footer__form" novalidate>
+                <label for="footer-club-email" class="sr-only">Email address</label>
+                <input
+                  id="footer-club-email"
+                  name="email"
+                  type="email"
+                  class="site-footer__input"
+                  placeholder="Email address"
+                  autocomplete="email"
+                  required
+                />
+                <button
+                  type="submit"
+                  class="site-footer__submit"
+                  aria-label="Subscribe to club updates"
+                >
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    aria-hidden="true"
+                  >
+                    <path d="M2.5 8h11M9.5 4l4 4-4 4" />
+                  </svg>
+                </button>
+              </form>
+              <p
+                class="site-footer__feedback"
+                data-footer-feedback
+                role="status"
+                aria-live="polite"
+                hidden
+              ></p>
+            </div>
+
+            <div class="site-footer__col">
+              <h2 class="site-footer__col-heading">Menu</h2>
+              <ul class="site-footer__menu">
+                <li><a href="#runway" data-nav="home">Home</a></li>
+                <li><a href="#full-catalog" data-nav="catalog">Catalog</a></li>
+                <li><a href="#shipping-policy" data-nav="contact">Contact</a></li>
+                <li><a href="#shipping-policy" data-nav="shipping">Shipping Policy</a></li>
+                <li><a href="#tlqproject" data-nav="project">TLQPROJECT</a></li>
+              </ul>
+            </div>
+
+            <div class="site-footer__col">
+              <h2 class="site-footer__col-heading">Client Services</h2>
+              <p class="site-footer__meta">
+                African football heritage jerseys &amp; accessories designed in Paris. Ships across the US, Canada, and worldwide pre-order.
+              </p>
+              <p class="site-footer__contact">
+                <a
+                  href="mailto:TLQ.projectparis@gmail.com?subject=Tout%20le%20Quartier%20%E2%80%94%20Inquiry"
+                  class="tlq-link-inline"
+                >
+                  TLQ.projectparis@gmail.com
+                </a>
+              </p>
+            </div>
+          </div>
+
+          <div class="site-footer__bottom">
+            <div class="site-footer__bottom-left">
+              <span class="site-footer__copy">© 2026 TOUTLEQUARTIER</span>
+              <span class="site-footer__sep" aria-hidden="true">·</span>
+              <div class="site-footer__legal">
+                <button type="button" class="site-footer__legal-link" data-legal-open="privacy">
+                  Privacy policy
+                </button>
+                <span class="site-footer__sep" aria-hidden="true">·</span>
+                <button type="button" class="site-footer__legal-link" data-legal-open="refund">
+                  Refund policy
+                </button>
+              </div>
+            </div>
+
+            <button type="button" class="site-footer__top-btn" data-scroll-top>
+              Back to top <span aria-hidden="true">↑</span>
+            </button>
           </div>
         </div>
       </footer>
@@ -901,6 +1211,300 @@
             </div>
           </div>
         </div>
+      </div>
+    </dialog>
+
+    <dialog id="account-dialog" class="account-dialog" aria-labelledby="account-dialog-title">
+      <div class="account-dialog__shell">
+        <div class="account-dialog__head">
+          <div class="account-dialog__title-group">
+            <button
+              type="button"
+              class="account-dialog__back"
+              data-account-back
+              aria-label="Back to account options"
+              hidden
+            >
+              <span aria-hidden="true">←</span>
+            </button>
+            <h2 id="account-dialog-title" class="account-dialog__title" data-account-heading>
+              Account
+            </h2>
+          </div>
+          <button
+            type="button"
+            class="bag-dialog__close"
+            data-account-close
+            aria-label="Close account modal"
+          >
+            <svg width="16" height="16" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
+              <path d="M3 3l12 12M15 3L3 15" />
+            </svg>
+          </button>
+        </div>
+
+        <div class="account-dialog__body">
+          <!-- Panel 1: Signed-Out Account Hub -->
+          <div data-account-view="menu">
+            <p class="account-dialog__lead">
+              Sign in to access your Tout le Quartier profile, saved preferences, and order summaries.
+            </p>
+            <div class="account-dialog__stack">
+              <button
+                type="button"
+                class="account-btn account-btn--primary"
+                data-account-goto="signin"
+              >
+                Sign in with Email
+              </button>
+              <button
+                type="button"
+                class="account-btn account-btn--secondary"
+                data-account-open-login
+              >
+                Other sign in options
+              </button>
+            </div>
+            <div class="account-quick-grid">
+              <button
+                type="button"
+                class="account-quick-btn"
+                data-account-shortcut="orders"
+              >
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+                  <path d="M6 7h12l1 13H5L6 7zM9 7V5a3 3 0 0 1 6 0v2" />
+                </svg>
+                <span>Orders</span>
+              </button>
+              <button
+                type="button"
+                class="account-quick-btn"
+                data-account-shortcut="profile"
+              >
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+                  <circle cx="12" cy="8" r="3.8" />
+                  <path d="M5 20a7 7 0 0 1 14 0" />
+                </svg>
+                <span>Profile</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Panel 2: Static Email Sign In Form -->
+          <div data-account-view="signin" hidden>
+            <form id="account-signin-form" class="account-form" novalidate>
+              <div class="tlq-field">
+                <label for="acc-signin-email" class="tlq-field__label">Email address</label>
+                <input
+                  id="acc-signin-email"
+                  name="email"
+                  type="email"
+                  class="tlq-field__input"
+                  placeholder="Enter your email"
+                  autocomplete="email"
+                  required
+                />
+              </div>
+
+              <div class="tlq-field">
+                <label for="acc-signin-password" class="tlq-field__label">Password</label>
+                <div class="account-pass-wrap">
+                  <input
+                    id="acc-signin-password"
+                    name="password"
+                    type="password"
+                    class="tlq-field__input"
+                    placeholder="Enter your password"
+                    autocomplete="current-password"
+                    required
+                  />
+                  <button
+                    type="button"
+                    class="account-pass-toggle"
+                    data-toggle-pass="acc-signin-password"
+                    aria-label="Show password"
+                  >
+                    Show
+                  </button>
+                </div>
+              </div>
+
+              <p class="tlq-affiliate__error" data-account-signin-error role="alert" hidden></p>
+
+              <button type="submit" class="account-btn account-btn--primary">
+                Sign in
+              </button>
+
+              <p class="account-form__switch">
+                New to Tout le Quartier?
+                <button type="button" class="tlq-inline-action" data-account-goto="register">
+                  Create account
+                </button>
+              </p>
+            </form>
+          </div>
+
+          <!-- Panel 3: Create Account Form -->
+          <div data-account-view="register" hidden>
+            <form id="account-register-form" class="account-form" novalidate>
+              <div class="tlq-field">
+                <label for="acc-reg-name" class="tlq-field__label">Full name</label>
+                <input
+                  id="acc-reg-name"
+                  name="name"
+                  type="text"
+                  class="tlq-field__input"
+                  placeholder="Enter your full name"
+                  autocomplete="name"
+                  required
+                />
+              </div>
+
+              <div class="tlq-field">
+                <label for="acc-reg-email" class="tlq-field__label">Email address</label>
+                <input
+                  id="acc-reg-email"
+                  name="email"
+                  type="email"
+                  class="tlq-field__input"
+                  placeholder="Enter your email"
+                  autocomplete="email"
+                  required
+                />
+              </div>
+
+              <div class="tlq-field">
+                <label for="acc-reg-password" class="tlq-field__label">Password</label>
+                <div class="account-pass-wrap">
+                  <input
+                    id="acc-reg-password"
+                    name="password"
+                    type="password"
+                    class="tlq-field__input"
+                    placeholder="Minimum 4 characters"
+                    autocomplete="new-password"
+                    required
+                  />
+                  <button
+                    type="button"
+                    class="account-pass-toggle"
+                    data-toggle-pass="acc-reg-password"
+                    aria-label="Show password"
+                  >
+                    Show
+                  </button>
+                </div>
+              </div>
+
+              <p class="tlq-affiliate__error" data-account-register-error role="alert" hidden></p>
+
+              <button type="submit" class="account-btn account-btn--primary">
+                Create account
+              </button>
+
+              <p class="account-form__switch">
+                Already have an account?
+                <button type="button" class="tlq-inline-action" data-account-goto="signin">
+                  Sign in
+                </button>
+              </p>
+            </form>
+          </div>
+
+          <!-- Panel 4: Signed-In Member Hub (Orders & Profile) -->
+          <div data-account-view="member" hidden>
+            <div class="account-member-card">
+              <span class="account-member-avatar" data-member-avatar aria-hidden="true">TL</span>
+              <div class="account-member-meta">
+                <p class="account-member-name" data-member-name></p>
+                <p class="account-member-email" data-member-email></p>
+              </div>
+            </div>
+
+            <div class="account-quick-grid account-quick-grid--tabs" role="tablist" aria-label="Account sections">
+              <button
+                type="button"
+                role="tab"
+                class="account-tab-btn is-active"
+                aria-selected="true"
+                data-member-tab="orders"
+              >
+                Orders
+              </button>
+              <button
+                type="button"
+                role="tab"
+                class="account-tab-btn"
+                aria-selected="false"
+                data-member-tab="profile"
+              >
+                Profile
+              </button>
+            </div>
+
+            <div data-member-panel="orders" class="account-orders-panel">
+              <div data-account-orders-list></div>
+            </div>
+
+            <div data-member-panel="profile" class="account-profile-panel" hidden>
+              <form id="account-profile-form" class="account-form" novalidate>
+                <div class="tlq-field">
+                  <label for="acc-prof-name" class="tlq-field__label">Display name</label>
+                  <input
+                    id="acc-prof-name"
+                    name="name"
+                    type="text"
+                    class="tlq-field__input"
+                    required
+                  />
+                </div>
+
+                <div class="tlq-field">
+                  <label for="acc-prof-region" class="tlq-field__label">Preferred shipping region</label>
+                  <select id="acc-prof-region" name="region" class="tlq-field__input">
+                    <option value="United States">United States (3–5 business days)</option>
+                    <option value="Canada">Canada (3–7 business days)</option>
+                    <option value="International">International — Pre-Order (1–3 weeks)</option>
+                  </select>
+                </div>
+
+                <button type="submit" class="account-btn account-btn--primary">
+                  Save profile
+                </button>
+              </form>
+            </div>
+
+            <div class="account-member-foot">
+              <button type="button" class="tlq-inline-action" data-account-goto-affiliate>
+                TLQPROJECT Affiliate Portal
+              </button>
+              <button type="button" class="account-signout-btn" data-account-signout>
+                Sign out
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </dialog>
+
+    <dialog id="legal-dialog" class="legal-dialog" aria-labelledby="legal-dialog-title">
+      <div class="legal-dialog__shell">
+        <div class="account-dialog__head">
+          <h2 id="legal-dialog-title" class="account-dialog__title" data-legal-title>
+            Privacy policy
+          </h2>
+          <button
+            type="button"
+            class="bag-dialog__close"
+            data-legal-close
+            aria-label="Close policy dialog"
+          >
+            <svg width="16" height="16" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
+              <path d="M3 3l12 12M15 3L3 15" />
+            </svg>
+          </button>
+        </div>
+        <div class="legal-dialog__body" data-legal-body></div>
       </div>
     </dialog>
 
