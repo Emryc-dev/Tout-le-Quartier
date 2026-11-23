@@ -1,0 +1,911 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#ffffff" />
+    <title>Tout le Quartier — Official Runway &amp; Store</title>
+    <meta
+      name="description"
+      content="Explore the Tout le Quartier 3D Runway, shop official African heritage jerseys and accessories, and build your look."
+    />
+    <meta property="og:title" content="Tout le Quartier — Official Runway & Store" />
+    <meta
+      property="og:description"
+      content="Explore the Tout le Quartier 3D Runway, shop official African heritage jerseys and accessories, and build your look."
+    />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link
+      rel="icon"
+      type="image/png"
+      href="/assets/aistudio/Screenshot_2026-11-23_121852-removebg-preview_620dc06d.png"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="site-header shopify-section-group-header-group">
+      <a
+        href="#runway"
+        data-nav="home"
+        class="brand"
+        aria-label="Tout le Quartier home"
+      >
+        <img
+          src="/assets/aistudio/Screenshot_2026-11-23_121852-removebg-preview_620dc06d.png"
+          alt=""
+          class="brand-mark"
+          width="22"
+          height="30"
+          referrerpolicy="no-referrer"
+        />
+        <span class="brand-wordmark">TOUT LE QUARTIER</span>
+      </a>
+
+      <nav aria-label="Main navigation">
+        <a href="#runway" data-nav="home" aria-current="page">Runway</a>
+        <a href="#full-catalog" data-nav="catalog">Catalog</a>
+        <a href="#tlqproject" data-nav="project">TLQPROJECT</a>
+        <a href="#shipping-policy" data-nav="shipping">Shipping</a>
+      </nav>
+
+      <button
+        type="button"
+        id="open-bag"
+        class="bag-trigger"
+        aria-label="Open shopping bag"
+        aria-haspopup="dialog"
+        aria-controls="bag-dialog"
+      >
+        <svg
+          width="22"
+          height="24"
+          viewBox="0 0 24 26"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.3"
+          aria-hidden="true"
+        >
+          <path d="M4 8h16l1 16H3L4 8zM8 8V6a4 4 0 0 1 8 0v2" />
+        </svg>
+        <span class="bag-count" data-cart-count>0</span>
+      </button>
+    </header>
+
+    <main id="app-views">
+      <!-- View A: Runway + Full Catalog (default active) -->
+      <div id="view-home" data-view="home">
+        <runway-section
+          id="Runway-toutlequartier__the_runway"
+          class="rw rw--add-icon rw--popup rw--list has-dividers has-border"
+          style="
+            --rw-c-stage: #ffffff;
+            --rw-c-panel: #ffffff;
+            --rw-c-text: #151413;
+            --rw-c-muted: #66625c;
+            --rw-c-accent: #0e0e0e;
+            --rw-c-on-accent: #ffffff;
+            --rw-c-line: #c8c8c8;
+            --rw-card: #DFDFDF;
+            --rw-hf: var(--font-heading--family, inherit);
+            --rw-hw: 400;
+            --rw-h-d: 46px;
+            --rw-h-m: 24px;
+            --rw-sub-d: 12px;
+            --rw-sub-m: 12px;
+            --rw-eyebrow-d: 11px;
+            --rw-eyebrow-m: 10px;
+            --rw-label-d: 10px;
+            --rw-label-m: 9px;
+            --rw-chip-d: 17px;
+            --rw-chip-m: 18px;
+            --rw-ph-d: 18px;
+            --rw-ph-m: 16px;
+            --rw-pt-size-d: 13px;
+            --rw-pt-size-m: 12px;
+            --rw-price-d: 12px;
+            --rw-price-m: 12px;
+            --rw-opt-d: 11px;
+            --rw-opt-m: 11px;
+            --rw-total-d: 16px;
+            --rw-total-m: 16px;
+            --rw-thumb-d: 92px;
+            --rw-thumb-m: 62px;
+            --rw-tag-top: 18px;
+            --rw-tag-left: 0px;
+            --rw-thumb-radius: 0px;
+            --rw-morph: 900ms;
+            --rw-bar-r: 20px;
+            --rw-panel-w: 380px;
+            --rw-panel-pad-d: 32px;
+            --rw-radius: 0px;
+            --rw-max: none;
+            --rw-speed: 5s;
+            --rw-ax: 40%;
+            --rw-btn-radius: 0px;
+            --rw-pill-radius: 30px;
+            --rw-add-radius: 20px;
+          "
+          data-feel="balanced"
+          data-blur="true"
+          data-mblur="true"
+          data-style="ring"
+          data-mstyle="classic"
+          data-fit="true"
+          data-height-mode="original"
+          data-height-vh="100"
+          data-mheight-mode="custom"
+          data-mheight-vh="109"
+          data-reflect="false"
+          data-autoplay="true"
+          data-speed="5000"
+          data-after-add="stay"
+          data-bundle-code=""
+          data-msg-choose="Pick a size for: [items]"
+          data-msg-error="Couldn’t add to bag. Please try again."
+          data-msg-soldout="Sold out"
+        ></runway-section>
+
+        <section
+          id="full-catalog"
+          class="tlq-catalog"
+          aria-labelledby="tlq-catalog-heading"
+        >
+          <div class="tlq-catalog__inner">
+            <div class="tlq-catalog__header">
+              <div class="tlq-catalog__titles">
+                <p class="tlq-catalog__eyebrow">Tout le Quartier · Official Store</p>
+                <h2 id="tlq-catalog-heading" class="tlq-catalog__heading">
+                  The Collection
+                </h2>
+                <p class="tlq-catalog__sub">
+                  Official Tout le Quartier jerseys and accessories.
+                </p>
+              </div>
+              <div class="tlq-catalog__tools">
+                <div
+                  class="tlq-catalog__filters"
+                  role="tablist"
+                  aria-label="Filter collection by category"
+                  data-catalog-filters
+                ></div>
+              </div>
+            </div>
+
+            <div class="tlq-catalog__grid" data-catalog-grid></div>
+          </div>
+        </section>
+      </div>
+
+      <!-- View B: Dedicated Product Detail Page (#product/<id>) -->
+      <div id="view-product" data-view="product" hidden>
+        <section
+          id="product-detail-view"
+          class="tlq-pdp"
+          aria-live="polite"
+          hidden
+        ></section>
+      </div>
+
+      <!-- View C: TLQPROJECT — Official Affiliate Program (#tlqproject) -->
+      <div id="view-project" data-view="project" hidden>
+        <section
+          id="tlq-project-view"
+          class="tlq-editorial"
+          aria-labelledby="tlq-project-heading"
+          hidden
+        >
+          <div class="tlq-editorial__inner">
+            <div class="tlq-pdp__crumb">
+              <button type="button" class="tlq-back-btn" data-nav="home">
+                <span aria-hidden="true">←</span> Back to Runway &amp; Catalog
+              </button>
+              <span class="tlq-crumb-trail">Home / TLQPROJECT</span>
+            </div>
+
+            <div class="tlq-affiliate__header">
+              <p class="tlq-editorial__eyebrow">Tout le Quartier · Community &amp; Ambassadors</p>
+              <h1 id="tlq-project-heading" class="tlq-editorial__title">
+                TLQPROJECT
+              </h1>
+            </div>
+
+            <div class="tlq-affiliate__frame">
+              <!-- Left Column: Dark Editorial Campaign Panel -->
+              <div class="tlq-affiliate__visual">
+                <div class="tlq-affiliate__backdrop" aria-hidden="true">
+                  <img
+                    src="/assets/aistudio/cutouts/cameroon-black.png"
+                    alt=""
+                    class="tlq-affiliate__bg-figure tlq-affiliate__bg-figure--left"
+                    referrerpolicy="no-referrer"
+                  />
+                  <img
+                    src="/assets/aistudio/487CEFF0-C989-4F90-AE39-E85C2191075D-removebg-preview_ed0f7266.png"
+                    alt=""
+                    class="tlq-affiliate__bg-figure tlq-affiliate__bg-figure--center"
+                    referrerpolicy="no-referrer"
+                  />
+                  <img
+                    src="/assets/aistudio/cutouts/gabon-yellow.png"
+                    alt=""
+                    class="tlq-affiliate__bg-figure tlq-affiliate__bg-figure--right"
+                    referrerpolicy="no-referrer"
+                  />
+                </div>
+                <div class="tlq-affiliate__scrim" aria-hidden="true"></div>
+
+                <div class="tlq-affiliate__manifesto">
+                  <img
+                    src="/assets/aistudio/Screenshot_2026-11-23_121852-removebg-preview_620dc06d.png"
+                    alt="Tout le Quartier logo"
+                    class="tlq-affiliate__logo"
+                    width="42"
+                    height="58"
+                    referrerpolicy="no-referrer"
+                  />
+                  <p class="tlq-affiliate__wordmark">TOUTLEQUARTIER</p>
+                  <p class="tlq-affiliate__city">PARIS</p>
+
+                  <div class="tlq-affiliate__divider" aria-hidden="true"></div>
+
+                  <p class="tlq-affiliate__copy">
+                    Become an official Tout le Quartier affiliate and be part of something bigger than fashion.
+                  </p>
+                  <p class="tlq-affiliate__copy">
+                    As an affiliate, you'll earn commission while helping us share powerful designs that speak to identity, culture, and unity.
+                  </p>
+                  <p class="tlq-affiliate__copy tlq-affiliate__copy--motto">
+                    Carry the culture, Share the message, Grow with us.
+                  </p>
+                  <p class="tlq-affiliate__welcome">WELCOME HOME</p>
+                </div>
+              </div>
+
+              <!-- Right Column: Affiliate Application / Sign-In / Confirmation -->
+              <div class="tlq-affiliate__form-col">
+                <!-- Panel 1: Apply Form -->
+                <div data-affiliate-panel="apply">
+                  <h2 class="tlq-affiliate__form-title">Apply to Our Affiliate Program</h2>
+
+                  <ul class="tlq-affiliate__benefits">
+                    <li>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+                        <rect x="3" y="8" width="18" height="4" />
+                        <path d="M12 8v13M5 12v9h14v-9M7.5 8a2.5 2.5 0 1 1 2.5-2.5V8H7.5zm9 0a2.5 2.5 0 1 0-2.5-2.5V8h2.5z" />
+                      </svg>
+                      <span>Share your link or coupon on social platforms to promote our products.</span>
+                    </li>
+                    <li>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+                        <ellipse cx="12" cy="6" rx="7" ry="3" />
+                        <path d="M5 6v6c0 1.66 3.13 3 7 3s7-1.34 7-3V6" />
+                        <path d="M5 12v6c0 1.66 3.13 3 7 3s7-1.34 7-3v-6" />
+                      </svg>
+                      <span>Earn commission per order you refer and receive payments.</span>
+                    </li>
+                    <li>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+                        <rect x="4" y="3" width="16" height="18" />
+                        <path d="M8 8h8M8 12h8M8 16h5" />
+                      </svg>
+                      <span>In affiliate portal, access marketing assets and track all referrals.</span>
+                    </li>
+                  </ul>
+
+                  <form id="tlq-affiliate-form" class="tlq-affiliate__form" novalidate>
+                    <div class="tlq-field">
+                      <label for="aff-email" class="tlq-field__label">Email address</label>
+                      <input
+                        id="aff-email"
+                        name="email"
+                        type="email"
+                        class="tlq-field__input"
+                        placeholder="Enter email address"
+                        autocomplete="email"
+                        required
+                      />
+                    </div>
+
+                    <div class="tlq-field">
+                      <label for="aff-name" class="tlq-field__label">Name</label>
+                      <input
+                        id="aff-name"
+                        name="name"
+                        type="text"
+                        class="tlq-field__input"
+                        placeholder="Enter your name"
+                        autocomplete="name"
+                        required
+                      />
+                    </div>
+
+                    <div class="tlq-field">
+                      <label for="aff-paypal" class="tlq-field__label">PayPal Account Email</label>
+                      <p class="tlq-field__hint">
+                        If you don't have a PayPal account, create one for free or leave it blank.
+                      </p>
+                      <input
+                        id="aff-paypal"
+                        name="paypalEmail"
+                        type="email"
+                        class="tlq-field__input"
+                        placeholder="Enter PayPal account"
+                        autocomplete="off"
+                      />
+                    </div>
+
+                    <fieldset class="tlq-field tlq-field--channels">
+                      <legend class="tlq-field__label">Channel Information</legend>
+                      <p class="tlq-field__hint">
+                        Enter your username. Don't use spaces or the @ symbol.
+                      </p>
+
+                      <div class="tlq-channels-grid">
+                        <label class="tlq-channel-input">
+                          <span class="tlq-channel-input__icon" aria-hidden="true">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                              <path d="M15 3h-3a4 4 0 0 0-4 4v3H5v4h3v7h4v-7h3l1-4h-4V7a1 1 0 0 1 1-1h2V3z" />
+                            </svg>
+                          </span>
+                          <span class="sr-only">Facebook username</span>
+                          <input
+                            type="text"
+                            name="facebook"
+                            placeholder="Facebook"
+                            autocomplete="off"
+                            spellcheck="false"
+                          />
+                        </label>
+
+                        <label class="tlq-channel-input">
+                          <span class="tlq-channel-input__icon" aria-hidden="true">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                              <rect x="3" y="3" width="18" height="18" rx="4" />
+                              <circle cx="12" cy="12" r="4" />
+                              <circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" />
+                            </svg>
+                          </span>
+                          <span class="sr-only">Instagram username</span>
+                          <input
+                            type="text"
+                            name="instagram"
+                            placeholder="Instagram"
+                            autocomplete="off"
+                            spellcheck="false"
+                          />
+                        </label>
+
+                        <label class="tlq-channel-input">
+                          <span class="tlq-channel-input__icon" aria-hidden="true">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                              <path d="M14 3v11a4 4 0 1 1-3-3.87V6.5M14 6.5c1.3 1.7 3.2 2.7 5.5 2.8" />
+                            </svg>
+                          </span>
+                          <span class="sr-only">Tik Tok username</span>
+                          <input
+                            type="text"
+                            name="tiktok"
+                            placeholder="Tik Tok"
+                            autocomplete="off"
+                            spellcheck="false"
+                          />
+                        </label>
+
+                        <label class="tlq-channel-input">
+                          <span class="tlq-channel-input__icon" aria-hidden="true">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                              <path d="M12 3c-3 0-5 2.2-5 5.2v2.4c-.7.2-1.4.5-1.4 1.1 0 .6.7.9 1.5 1.1-.4 1.5-1.5 2.8-3.1 3.4 0 .6.8 1.2 2.4 1.5.2.5.4 1 1 1.2 1.1.3 2.5-.2 4.6-.2s3.5.5 4.6.2c.6-.2.8-.7 1-1.2 1.6-.3 2.4-.9 2.4-1.5-1.6-.6-2.7-1.9-3.1-3.4.8-.2 1.5-.5 1.5-1.1 0-.6-.7-.9-1.4-1.1V8.2C17 5.2 15 3 12 3z" />
+                            </svg>
+                          </span>
+                          <span class="sr-only">Snapchat username</span>
+                          <input
+                            type="text"
+                            name="snapchat"
+                            placeholder="Snapchat"
+                            autocomplete="off"
+                            spellcheck="false"
+                          />
+                        </label>
+                      </div>
+                    </fieldset>
+
+                    <p
+                      class="tlq-affiliate__error"
+                      data-affiliate-error
+                      role="alert"
+                      hidden
+                    ></p>
+
+                    <div class="tlq-affiliate__foot">
+                      <p class="tlq-affiliate__switch">
+                        Already have an account?
+                        <button
+                          type="button"
+                          class="tlq-inline-action"
+                          data-affiliate-mode="signin"
+                        >
+                          Sign in
+                        </button>
+                      </p>
+                      <button type="submit" class="tlq-btn tlq-btn--primary tlq-affiliate__submit">
+                        Apply
+                      </button>
+                    </div>
+                  </form>
+                </div>
+
+                <!-- Panel 2: Affiliate Sign In -->
+                <div data-affiliate-panel="signin" hidden>
+                  <h2 class="tlq-affiliate__form-title">Affiliate Portal Sign In</h2>
+                  <p class="tlq-affiliate__sub-copy">
+                    Sign in with the email address you used for your Tout le Quartier affiliate application to review your referral details.
+                  </p>
+
+                  <form id="tlq-affiliate-signin-form" class="tlq-affiliate__form" novalidate>
+                    <div class="tlq-field">
+                      <label for="aff-signin-email" class="tlq-field__label">Email address</label>
+                      <input
+                        id="aff-signin-email"
+                        name="email"
+                        type="email"
+                        class="tlq-field__input"
+                        placeholder="Enter email address"
+                        autocomplete="email"
+                        required
+                      />
+                    </div>
+
+                    <div class="tlq-field">
+                      <label for="aff-signin-pass" class="tlq-field__label">Password</label>
+                      <input
+                        id="aff-signin-pass"
+                        name="password"
+                        type="password"
+                        class="tlq-field__input"
+                        placeholder="Enter your password"
+                        autocomplete="current-password"
+                        required
+                      />
+                    </div>
+
+                    <p
+                      class="tlq-affiliate__error"
+                      data-affiliate-signin-error
+                      role="alert"
+                      hidden
+                    ></p>
+
+                    <div class="tlq-affiliate__foot">
+                      <p class="tlq-affiliate__switch">
+                        New to TLQPROJECT?
+                        <button
+                          type="button"
+                          class="tlq-inline-action"
+                          data-affiliate-mode="apply"
+                        >
+                          Apply here
+                        </button>
+                      </p>
+                      <button type="submit" class="tlq-btn tlq-btn--primary tlq-affiliate__submit">
+                        Sign in
+                      </button>
+                    </div>
+                  </form>
+                </div>
+
+                <!-- Panel 3: Application Confirmation -->
+                <div data-affiliate-panel="success" hidden>
+                  <p class="tlq-editorial__eyebrow">Application Received · TLQPROJECT</p>
+                  <h2 class="tlq-affiliate__form-title" data-affiliate-success-title>
+                    Welcome to Tout le Quartier
+                  </h2>
+                  <p class="tlq-affiliate__sub-copy">
+                    Your affiliate application has been registered. Our Paris team will review your channels and follow up with your portal access and campaign assets.
+                  </p>
+
+                  <dl class="tlq-affiliate__receipt" data-affiliate-receipt></dl>
+
+                  <div class="tlq-affiliate__success-actions">
+                    <button
+                      type="button"
+                      class="tlq-btn tlq-btn--primary"
+                      data-affiliate-copy-code
+                    >
+                      Copy Referral Code
+                    </button>
+                    <button
+                      type="button"
+                      class="tlq-btn tlq-btn--outline"
+                      data-affiliate-reset
+                    >
+                      Submit Another Application
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="tlq-editorial__strip">
+              <div class="tlq-editorial__strip-head">
+                <h2 class="tlq-editorial__strip-title">Archive Highlights</h2>
+                <a href="#full-catalog" data-nav="catalog" class="tlq-link-inline">
+                  Shop all 12 pieces →
+                </a>
+              </div>
+              <div class="tlq-editorial__thumbs" data-project-thumbs></div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- View D: Shipping Policy (#shipping-policy) -->
+      <div id="view-shipping" data-view="shipping" hidden>
+        <section
+          id="tlq-shipping-view"
+          class="tlq-policy"
+          aria-labelledby="tlq-shipping-heading"
+          hidden
+        >
+          <div class="tlq-policy__inner">
+            <div class="tlq-pdp__crumb">
+              <button type="button" class="tlq-back-btn" data-nav="home">
+                <span aria-hidden="true">←</span> Back to Runway &amp; Catalog
+              </button>
+              <span class="tlq-crumb-trail">Home / Shipping Policy</span>
+            </div>
+
+            <header class="tlq-policy__hero">
+              <div class="tlq-policy__intro">
+                <p class="tlq-policy__eyebrow">Tout le Quartier · Client Services</p>
+                <h1 id="tlq-shipping-heading" class="tlq-policy__title">
+                  Shipping Policy
+                </h1>
+                <p class="tlq-policy__lead">
+                  Thank you for shopping with us! We’re committed to delivering your order as quickly and efficiently as possible. Please review our shipping timelines and details below:
+                </p>
+              </div>
+
+              <div class="tlq-policy__summary" aria-label="Shipping timelines at a glance">
+                <p class="tlq-policy__summary-kicker">Dispatch Overview</p>
+                <table class="tlq-policy__table">
+                  <thead>
+                    <tr>
+                      <th scope="col">Destination</th>
+                      <th scope="col">Processing</th>
+                      <th scope="col">Shipping</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>United States</td>
+                      <td>1–3 business days</td>
+                      <td>3–5 business days</td>
+                    </tr>
+                    <tr>
+                      <td>Canada</td>
+                      <td>3–4 business days</td>
+                      <td>3–7 business days</td>
+                    </tr>
+                    <tr>
+                      <td>International (Pre-Order)</td>
+                      <td>3–4 business days*</td>
+                      <td>1–3 weeks</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <p class="tlq-policy__table-note">
+                  *After the pre-order processing window closes. All timelines are business-day estimates.
+                </p>
+              </div>
+            </header>
+
+            <section class="tlq-policy__section" aria-labelledby="tlq-regions-heading">
+              <div class="tlq-policy__section-head">
+                <div>
+                  <p class="tlq-policy__section-kicker">Destination Zones</p>
+                  <h2 id="tlq-regions-heading" class="tlq-policy__section-title">
+                    Timelines by Region
+                  </h2>
+                </div>
+                <div
+                  class="tlq-policy__filters"
+                  role="tablist"
+                  aria-label="Filter shipping details by destination"
+                  data-shipping-filters
+                >
+                  <button
+                    type="button"
+                    role="tab"
+                    class="tlq-filter-btn is-active"
+                    aria-selected="true"
+                    data-shipping-filter="all"
+                  >
+                    All Regions
+                  </button>
+                  <button
+                    type="button"
+                    role="tab"
+                    class="tlq-filter-btn"
+                    aria-selected="false"
+                    data-shipping-filter="us"
+                  >
+                    United States
+                  </button>
+                  <button
+                    type="button"
+                    role="tab"
+                    class="tlq-filter-btn"
+                    aria-selected="false"
+                    data-shipping-filter="ca"
+                  >
+                    Canada
+                  </button>
+                  <button
+                    type="button"
+                    role="tab"
+                    class="tlq-filter-btn"
+                    aria-selected="false"
+                    data-shipping-filter="intl"
+                  >
+                    International
+                  </button>
+                </div>
+              </div>
+
+              <div class="tlq-policy__grid" data-shipping-grid>
+                <!-- 01: United States Orders -->
+                <article class="tlq-region-card" data-shipping-region="us">
+                  <div class="tlq-region-card__head">
+                    <span class="tlq-region-card__index">01 · US</span>
+                    <h3 class="tlq-region-card__title">United States Orders</h3>
+                  </div>
+
+                  <dl class="tlq-region-card__metrics">
+                    <div class="tlq-region-card__metric">
+                      <dt>Processing Time</dt>
+                      <dd>1–3 business days</dd>
+                    </div>
+                    <div class="tlq-region-card__metric">
+                      <dt>Shipping Time</dt>
+                      <dd>3–5 business days</dd>
+                    </div>
+                  </dl>
+
+                  <ul class="tlq-region-card__list">
+                    <li>
+                      You will receive a tracking number via email once your order has been shipped.
+                    </li>
+                  </ul>
+                </article>
+
+                <!-- 02: Canada Orders -->
+                <article class="tlq-region-card" data-shipping-region="ca">
+                  <div class="tlq-region-card__head">
+                    <span class="tlq-region-card__index">02 · CA</span>
+                    <h3 class="tlq-region-card__title">Canada Orders</h3>
+                  </div>
+
+                  <dl class="tlq-region-card__metrics">
+                    <div class="tlq-region-card__metric">
+                      <dt>Processing Time</dt>
+                      <dd>3–4 business days</dd>
+                    </div>
+                    <div class="tlq-region-card__metric">
+                      <dt>Shipping Time</dt>
+                      <dd>3–7 business days</dd>
+                    </div>
+                  </dl>
+
+                  <p class="tlq-region-card__footnote">
+                    Standard cross-border dispatch with email tracking updates upon shipment.
+                  </p>
+                </article>
+
+                <!-- 03: International Orders -->
+                <article class="tlq-region-card" data-shipping-region="intl">
+                  <div class="tlq-region-card__head">
+                    <span class="tlq-region-card__index">03 · INTL</span>
+                    <h3 class="tlq-region-card__title">
+                      International Orders (Outside the US &amp; Canada)
+                    </h3>
+                  </div>
+
+                  <p class="tlq-region-card__callout">
+                    All international orders outside the US excluding CANADA are pre-order only and will be shipped after the pre-order processing window.
+                  </p>
+
+                  <dl class="tlq-region-card__metrics">
+                    <div class="tlq-region-card__metric">
+                      <dt>Processing Time (after pre-order)</dt>
+                      <dd>3–4 business days</dd>
+                    </div>
+                    <div class="tlq-region-card__metric">
+                      <dt>Shipping Time</dt>
+                      <dd>1–3 weeks (varies by destination)</dd>
+                    </div>
+                  </dl>
+
+                  <ul class="tlq-region-card__list">
+                    <li>
+                      Please note that customs duties, taxes, or import fees (if applicable) are the responsibility of the customer.
+                    </li>
+                  </ul>
+                </article>
+              </div>
+            </section>
+
+            <section class="tlq-policy__details" aria-label="Tracking and important notes">
+              <article class="tlq-policy__block">
+                <span class="tlq-pillar__num">04</span>
+                <h2 class="tlq-policy__block-title">Tracking &amp; Delivery</h2>
+                <p class="tlq-policy__block-text">
+                  Once your order is shipped, you will receive a tracking number via email. Please allow up to 48 hours for the tracking information to update.
+                </p>
+
+                <ol class="tlq-policy__steps">
+                  <li>
+                    <span class="tlq-policy__step-num">Step 1</span>
+                    <span class="tlq-policy__step-label">Order processed within your region’s dispatch window</span>
+                  </li>
+                  <li>
+                    <span class="tlq-policy__step-num">Step 2</span>
+                    <span class="tlq-policy__step-label">Shipment confirmation and tracking number sent via email</span>
+                  </li>
+                  <li>
+                    <span class="tlq-policy__step-num">Step 3</span>
+                    <span class="tlq-policy__step-label">Carrier scan and live tracking update within 48 hours</span>
+                  </li>
+                </ol>
+              </article>
+
+              <article class="tlq-policy__block">
+                <span class="tlq-pillar__num">05</span>
+                <h2 class="tlq-policy__block-title">Important Notes</h2>
+                <ul class="tlq-policy__notes">
+                  <li>
+                    Shipping times are estimates and may be affected by carrier delays, holidays, weather conditions, or customs clearance.
+                  </li>
+                  <li>
+                    For time-sensitive orders or special shipping requests, please contact us before placing your order.
+                  </li>
+                </ul>
+              </article>
+            </section>
+
+            <section class="tlq-policy__customs" aria-labelledby="tlq-customs-heading">
+              <div class="tlq-policy__customs-head">
+                <p class="tlq-policy__section-kicker">International Terms · EN / FR</p>
+                <h2 id="tlq-customs-heading" class="tlq-policy__customs-title">
+                  Customs Duties, Taxes &amp; Import Fees
+                </h2>
+              </div>
+
+              <div class="tlq-policy__bilingual">
+                <div class="tlq-policy__lang-col" lang="en">
+                  <p class="tlq-policy__lang-label">English</p>
+                  <p class="tlq-policy__lang-text">
+                    For all international orders, please note that we are not responsible for any customs duties, taxes, or additional fees that may apply upon delivery. These charges are the sole responsibility of the customer.
+                  </p>
+                </div>
+
+                <div class="tlq-policy__lang-col" lang="fr">
+                  <p class="tlq-policy__lang-label">Français</p>
+                  <p class="tlq-policy__lang-text">
+                    Pour toutes les commandes internationales, veuillez noter que nous ne sommes pas responsables des droits de douane, taxes ou frais supplémentaires qui peuvent s’appliquer lors de la livraison. Ces frais sont entièrement à la charge du client.
+                  </p>
+                </div>
+              </div>
+            </section>
+
+            <section class="tlq-policy__support" aria-labelledby="tlq-help-heading">
+              <div class="tlq-policy__support-main">
+                <p class="tlq-policy__section-kicker">Client Care</p>
+                <h2 id="tlq-help-heading" class="tlq-policy__support-title">
+                  Need Help?
+                </h2>
+                <p class="tlq-policy__support-text">
+                  If you have any questions or concerns regarding your shipment, feel free to reach out to us at:
+                </p>
+                <p class="tlq-policy__email-line">
+                  <a
+                    href="mailto:TLQ.projectparis@gmail.com?subject=Tout%20le%20Quartier%20%E2%80%94%20Shipping%20Inquiry"
+                    class="tlq-policy__email"
+                  >
+                    TLQ.projectparis@gmail.com
+                  </a>
+                </p>
+                <div class="tlq-policy__support-actions">
+                  <a
+                    href="mailto:TLQ.projectparis@gmail.com?subject=Tout%20le%20Quartier%20%E2%80%94%20Shipping%20Inquiry"
+                    class="tlq-btn tlq-btn--primary"
+                  >
+                    Email Client Services
+                  </a>
+                  <button
+                    type="button"
+                    class="tlq-btn tlq-btn--outline"
+                    data-copy-email="TLQ.projectparis@gmail.com"
+                  >
+                    Copy Email Address
+                  </button>
+                </div>
+              </div>
+
+              <div class="tlq-policy__signoff">
+                <p class="tlq-policy__thanks">Thank you for supporting our brand!</p>
+                <p class="tlq-policy__brand-sub">Tout le Quartier · Paris</p>
+                <div class="tlq-policy__signoff-links">
+                  <a href="#runway" data-nav="home" class="tlq-link-inline">
+                    Explore the 3D Runway
+                  </a>
+                  <a href="#full-catalog" data-nav="catalog" class="tlq-link-inline">
+                    Browse The Collection
+                  </a>
+                </div>
+              </div>
+            </section>
+          </div>
+        </section>
+      </div>
+
+      <footer class="site-footer">
+        <div class="site-footer__inner">
+          <p class="site-footer__brand">Tout le Quartier — Paris · Official Flagship Store</p>
+          <div class="site-footer__links">
+            <a href="#runway" data-nav="home">Runway</a>
+            <a href="#full-catalog" data-nav="catalog">Catalog</a>
+            <a href="#tlqproject" data-nav="project">TLQPROJECT</a>
+            <a href="#shipping-policy" data-nav="shipping">Shipping Policy</a>
+          </div>
+        </div>
+      </footer>
+    </main>
+
+    <dialog id="bag-dialog" class="bag-dialog" aria-labelledby="bag-dialog-title">
+      <div class="bag-dialog__shell">
+        <div class="bag-dialog__head">
+          <div>
+            <p class="bag-dialog__eyebrow">Tout le Quartier · Shopping Bag</p>
+            <h2 id="bag-dialog-title" class="bag-dialog__title">
+              Your Bag <span class="bag-dialog__count" data-cart-count>0</span>
+            </h2>
+          </div>
+          <button
+            type="button"
+            class="bag-dialog__close"
+            data-bag-close
+            aria-label="Close shopping bag"
+          >
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
+              <path d="M3 3l12 12M15 3L3 15" />
+            </svg>
+          </button>
+        </div>
+
+        <div class="bag-dialog__body" data-bag-items></div>
+
+        <div class="bag-dialog__foot" data-bag-footer>
+          <div class="bag-dialog__summary" data-bag-summary></div>
+          <div class="bag-dialog__actions" data-bag-actions>
+            <button type="button" class="bag-btn bag-btn--primary" data-bag-checkout>
+              Proceed to Checkout (Order Summary)
+            </button>
+            <div class="bag-dialog__subactions">
+              <button type="button" class="bag-btn bag-btn--ghost" data-bag-export>
+                Download Shortlist (.txt)
+              </button>
+              <button type="button" class="bag-btn bag-btn--ghost" data-bag-clear>
+                Clear bag
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </dialog>
+
+    <div id="bag-status" class="bag-status" role="status" aria-live="polite"></div>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>

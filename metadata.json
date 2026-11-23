@@ -1,0 +1,6 @@
+{
+  "name": "Try the Look — Tout le Quartier Runway",
+  "description": "Eight looks, styled head to toe in Tout le Quartier. Explore the 3D runway, isolate a look, tap a pin, or browse the full catalog.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
